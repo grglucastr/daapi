@@ -52,11 +52,33 @@ var bookController = function(Book, bookDataInit){
 			book.genre = req.body.genre;
 			book.read = req.body.read;
 			
-			book.save();
-			res.json(book);
+			book.save(function(err, bookUpdated){
+				showResponse(200, bookUpdated, res, err);
+			});
 				
 		});
-	}
+	};
+
+	var patchBook = function(req, res){
+		Book.findById(req.params.id, function(err, book){
+			if(!err){
+				if(req.body._id){
+					delete req.body._id;
+				}
+
+				for(var i in req.body){
+					book[i] = req.body[i];
+				}
+
+				book.save(function(err, bookUpdated){
+					showResponse(200, bookUpdated, res, err);
+				});
+
+			}else{
+				showResponse(500, book, res, err);
+			}
+		});
+	};
 	
 	var showResponse = function(successStatusCode, dataToSend, res, err) {
 		if(!err){
@@ -64,14 +86,15 @@ var bookController = function(Book, bookDataInit){
 		}else{
 			res.status(500).json(err);
 		}
-	}
+	};
 	
 	return{
 		initializeBooksCollection:initializeBooksCollection,
 		getAll:getAll,
 		getById: getById,
 		putBook:putBook,
-		postNewBook:postNewBook
+		postNewBook:postNewBook,
+		patchBook: patchBook
 	};
 }
 
