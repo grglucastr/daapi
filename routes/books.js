@@ -13,6 +13,8 @@ var router = function(){
 	bookRouter.get('/:id', bookController.getById);
 
 	bookRouter.patch('/:id', bookController.patchBook);
+
+	bookRouter.delete('/:id', bookController.deleteBook);
 		
 	bookRouter.post('/', bookController.postNewBook);
 	
