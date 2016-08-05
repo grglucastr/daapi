@@ -55,7 +55,6 @@ var bookController = function(Book, bookDataInit){
 			book.save(function(err, bookUpdated){
 				showResponse(200, bookUpdated, res, err);
 			});
-				
 		});
 	};
 
@@ -80,6 +79,21 @@ var bookController = function(Book, bookDataInit){
 		});
 	};
 	
+	var deleteBook = function(req, res){
+		Book.findById({_id:req.params.id}, function(err, book){
+			if(!err){
+				book.remove(function(errRemove){
+					if(!errRemove){
+						res.status(204).json('Removed');
+					}else{
+						res.status(500).json(errRemove);
+					}
+				});
+			}
+			showResponse(204, book, res, err);
+		});
+	};
+
 	var showResponse = function(successStatusCode, dataToSend, res, err) {
 		if(!err){
 			res.status(successStatusCode).json(dataToSend);
@@ -94,7 +108,8 @@ var bookController = function(Book, bookDataInit){
 		getById: getById,
 		putBook:putBook,
 		postNewBook:postNewBook,
-		patchBook: patchBook
+		patchBook: patchBook,
+		deleteBook:deleteBook
 	};
 }
 
