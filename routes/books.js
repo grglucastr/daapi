@@ -11,6 +11,8 @@ var router = function(){
 	bookRouter.get('/', bookController.getAll);
 	
 	bookRouter.get('/:id', bookController.getById);
+
+	bookRouter.patch('/:id', bookController.patchBook);
 		
 	bookRouter.post('/', bookController.postNewBook);
 	
