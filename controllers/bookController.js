@@ -20,15 +20,37 @@ var bookController = function(Book, bookDataInit){
 		}
 		
 		Book.find(query, function(err, books){
+
+			var returnBooks = [];
+			books.forEach(function(element, index, array){
+				var book = element.toJSON();
+				book.links = {};
+				book.links.self = `http://${req.headers.host}/books/${book._id}`;
+				returnBooks.push(book);
+			});
+
 			var successStatusCode = 200; // OK
-			showResponse(successStatusCode, books, res, err);
+			showResponse(successStatusCode, returnBooks, res, err);
 		});
 	};
 	
 	var getById = function(req, res) {
 		Book.findById(req.params.id, function(err, result){
+
+			var book = result.toJSON();
+
+			var linkGenre = `http://${req.headers.host}/books?genre=${book.genre}`;
+			linkGenre = urlSpaces(linkGenre);
+
+			var linkAuthor = `http://${req.headers.host}/books?author=${book.author}`;
+			linkAuthor = urlSpaces(linkAuthor);
+
+			book.links = {};
+			book.links.filterByThisGenre = linkGenre;
+			book.links.filterByThisAuthor = linkAuthor;
+
 			var successStatusCode = 200; // OK
-			showResponse(successStatusCode, result, res, err);
+			showResponse(successStatusCode, book, res, err);
 		});
 	};
 	
@@ -102,6 +124,13 @@ var bookController = function(Book, bookDataInit){
 		}
 	};
 	
+	var urlSpaces = function(str){
+		while(str.indexOf(' ') != -1){
+			str = str.replace(' ', '%20');
+		}
+		return str;
+	}
+
 	return{
 		initializeBooksCollection:initializeBooksCollection,
 		getAll:getAll,
