@@ -8,12 +8,9 @@ var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/booksAPI');
 
-var db = mongoose.connection;
-
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var books = require('./routes/books')(db);
+var books = require('./routes/books')();
 
 var app = express();
 
