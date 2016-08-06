@@ -8,17 +8,16 @@ var router = function(){
 	
 	bookRouter.get('/init', bookController.initializeBooksCollection);
 	
-	bookRouter.get('/', bookController.getAll);
+	bookRouter.route('/')
+		.get(bookController.getAll)
+		.post(bookController.postNewBook);
 	
-	bookRouter.get('/:id', bookController.getById);
-
-	bookRouter.patch('/:id', bookController.patchBook);
-
-	bookRouter.delete('/:id', bookController.deleteBook);
-		
-	bookRouter.post('/', bookController.postNewBook);
-	
-	bookRouter.put('/:id', bookController.putBook);
+	bookRouter.route('/:id')
+		.all(bookController.searchById)
+		.get(bookController.getById)
+		.put(bookController.putBook)
+		.patch(bookController.patchBook)
+		.delete(bookController.deleteBook);
 	
 	return bookRouter; 
 }
